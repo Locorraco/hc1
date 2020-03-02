@@ -19,15 +19,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-
-float f(float x){
-    float y;
-    y = cos(x);
-    return y;
-}
+//#include <math.h>
+#include "library.h"
+#include <mpi.h>
 
 int main(int nargs, char **argv){
+    int miproc;
+    int numproc;
     /* for(int i = 0; i<nargs; i++){
         printf("%i\n", i);
         printf("%s\n", argv[i]);
@@ -40,6 +38,21 @@ int main(int nargs, char **argv){
     float x = 0.0;
     
     int n = 0;
+    float dN = 0;
+    float a0; 
+    float b0;
+    
+    MPI_Init(&nargs, &argv); /* Inicializar MPI */
+    
+        MPI_Comm_rank(MPI_COMM_WORLD, &miproc); /* Determina el rango del rpoceso invocado */
+        MPI_Comm_size(MPI_COMM_WORLD, &numproc); /* Determina el numero de procesos */
+        // printf("\nProceso: %i Total: %i\n", miproc)
+    
+    MPI_Barrier (MPI_COMM_WORLD);
+    
+    if (miproc == 0){
+        printf("I am 0 process.\n");
+    }
     
     if (nargs != 4){
         printf("Wrong number of arguments. You need 2 arguments.\n");
@@ -49,16 +62,24 @@ int main(int nargs, char **argv){
     sscanf(argv[1],"%f", &a);
     sscanf(argv[2],"%f", &b);
     sscanf(argv[3],"%f", &dx);
+    dN = (b-a)/numproc;
+    a0 = a+miproc*dN;
+    b0 = a+(miproc+1)*dN;
     
-    n = (b-a)/dx + 1;
+    //printf("Range_%i %f %f \n", miproc, a0, b0);
+    
+    n = (b0-a0)/dx + 1;
     printf("n=%i\n", n);
-    x = a;
+    x = a0;
     
     for(int i=1; i<=n; i++){
+        
         printf("%f\t%f\n",x, f(x));
+        
         //x = x+dx
-        x = a + i * dx;
+        x = a0 + i * dx;
     }
     
+    MPI_Finalize();
     return 0;
 }
