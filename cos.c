@@ -72,7 +72,7 @@ int main(int nargs, char **argv){
     a0 = a+miproc*dN;
     b0 = a+(miproc+1)*dN;
     
-    //printf("Range_%i %f %f \n", miproc, a0, b0);
+    printf("Range_%i %f %f \n", miproc, a0, b0);
     
     n = (b0-a0)/dx + 1;
     printf("n=%i\n", n);
@@ -83,7 +83,7 @@ int main(int nargs, char **argv){
         //printf("%f\t%f\n",x, f(x));
         y = f(x);
         //x = x+dx
-        x = a0 + i * dx;
+        x = a0 + (i * dx);
     }
     
     MPI_Barrier (MPI_COMM_WORLD);
