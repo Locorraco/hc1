@@ -67,7 +67,7 @@ install:
 # Make depend
 
 $(OBJS): %.o: %.c
-	$(CC) -std=c99 -c $< 
+	$(CC) -c $< 
 	@echo -en "\n"
 
 $(PROGRAM): $(OBJS)
